@@ -15,13 +15,21 @@ const KanbanBoard = () => {
 
   // Load data from localStorage on mount
   useEffect(() => {
-    const savedBoard = localStorage.getItem("kanbanBoard");
-    if (savedBoard) {
-      const parsedData = JSON.parse(savedBoard);
-      setColumns(parsedData.columns);
-      setTaskCounter(parsedData.taskCounter);
+    try {
+      const savedBoard = localStorage.getItem("kanbanBoard");
+      if (savedBoard) {
+        const parsedData = JSON.parse(savedBoard);
+        if (parsedData.columns) {
+          setColumns(parsedData.columns);
+          setTaskCounter(parsedData.taskCounter);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading localStorage data:", error);
+      localStorage.removeItem("kanbanBoard"); // Reset if corrupted
     }
   }, []);
+  
 
   // Save data to localStorage on change
   useEffect(() => {

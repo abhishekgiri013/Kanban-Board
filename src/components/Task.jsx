@@ -6,25 +6,17 @@ const Task = ({ task, index, columnId, deleteTask, updateTask }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newContent, setNewContent] = useState(task.content);
 
-  const handleEdit = () => {
-    setNewContent(task.content); // Reset input if editing again
-    setIsEditing(true);
-  };
-
+  const handleEdit = () => setIsEditing(true);
   const handleChange = (e) => setNewContent(e.target.value);
 
   const saveEdit = () => {
-    if (newContent.trim() !== "") {
-      updateTask(columnId, task.id, newContent);
-    }
+    if (newContent.trim() === "") return;
+    updateTask(columnId, task.id, newContent);
     setIsEditing(false);
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault(); // Prevent form submission
-      saveEdit();
-    }
+    if (e.key === "Enter") saveEdit();
   };
 
   return (
@@ -34,7 +26,7 @@ const Task = ({ task, index, columnId, deleteTask, updateTask }) => {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`p-3 rounded-lg flex justify-between items-center gap-2 w-full transition-all duration-200
+          className={`p-3 rounded-lg flex justify-between items-center gap-2 w-full transition-all duration-200 
             ${snapshot.isDragging ? "bg-indigo-500 shadow-2xl scale-105 text-white" : "bg-white shadow-md"}
           `}
         >
@@ -57,19 +49,13 @@ const Task = ({ task, index, columnId, deleteTask, updateTask }) => {
               </button>
             </div>
           ) : (
-            <p
-              className="text-sm break-words w-full cursor-pointer"
-              onClick={handleEdit}
-            >
+            <p className="text-sm break-words w-full cursor-pointer" onClick={handleEdit}>
               {task.content}
             </p>
           )}
 
           {!isEditing && (
-            <button
-              onClick={handleEdit}
-              className="text-gray-500 hover:text-gray-700"
-            >
+            <button onClick={handleEdit} className="text-gray-500 hover:text-gray-700">
               <Pencil size={16} />
             </button>
           )}
